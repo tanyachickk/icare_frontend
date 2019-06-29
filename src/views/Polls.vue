@@ -21,6 +21,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { State, Action } from 'vuex-class';
 import PageTitle from '@/components/PageTitle.vue';
 import Card from '@/components/Card.vue';
 import CardHeader from '@/components/CardHeader.vue';
@@ -29,9 +30,6 @@ import BasicButton from '@/components/BasicButton.vue';
 import PollsFilter from '@/components/PollsFilter.vue';
 import PollsQuestionView from '@/components/PollsQuestionView.vue';
 import QuestionModal from '@/components/QuestionModal.vue';
-import { getQuestions, createQuestion, deleteQuestion } from '@/api/questions';
-import { getSpecializations } from '@/api/specializations';
-import { createOption } from '@/api/options';
 
 @Component({
   components: {
@@ -46,10 +44,17 @@ import { createOption } from '@/api/options';
   },
 })
 export default class Polls extends Vue {
-  private questions: any[] = [];
-  private specializations = [];
-  private isShowModal = false;
+  @State('questions')
+  private questions!: any[];
+  @State('specializations')
+  private specializations: any;
 
+  @Action('createQuestion')
+  private addQuestion: any;
+  @Action('deleteQuestion')
+  private deleteQuestion: any;
+
+  private isShowModal = false;
   private filterSex = null;
   private filterAge = [0, 100];
   private filterSpecialization: any = null;
@@ -83,31 +88,8 @@ export default class Polls extends Vue {
     });
   }
 
-  private async createQuestion(data: any, options: string[]) {
-    const result = await createQuestion(data);
-    this.questions.push(result);
-    options.forEach((text, i) => {
-      if (text) {
-        createOption({ text, question: result.id, order: i }).then((res) => {
-          const index = this.questions.findIndex((q) => q.id === result.id);
-          const question = this.questions[index];
-          if (!question.options) {
-            question.options = [];
-          }
-          this.$set(this.questions, index, { ...question, options: [...question.options, res] });
-        });
-      }
-    });
-  }
-
-  private async deleteQuestion(id: number) {
-    await deleteQuestion(id);
-    this.questions = this.questions.filter((q) => q.id !== id);
-  }
-
-  private async created() {
-    this.questions = await getQuestions();
-    this.specializations = await getSpecializations();
+  private createQuestion(data: any, options: string[]) {
+    this.addQuestion({ data, options });
   }
 }
 </script>

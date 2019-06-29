@@ -67,6 +67,7 @@ export default class PollsQuestionView extends Vue {
     font-weight: 500;
     color: var(--dark-gray);
     margin-bottom: 0.5rem;
+    margin-right: 3.5rem;
   }
   &__controls {
     position: absolute;

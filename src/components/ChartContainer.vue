@@ -23,10 +23,9 @@ export default class ChartContainer extends Vue {
 .chart {
   margin-bottom: 2rem;
   padding: 1rem 2rem;
-  max-width: 800px;
   &__title {
     padding: 1rem 0 1.5rem;
-    font-size: 1.125rem;
+    font-size: 1rem;
     color: var(--dark-gray);
     text-align: center;
   }

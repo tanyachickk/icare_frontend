@@ -36,15 +36,16 @@ export default class Login extends Vue {}
   }
   &__icon-image {
     position: absolute;
-    top: 17vw;
-    left: 17vw;
+    top: 18vw;
+    left: 16vw;
     width: 10vw;
     height: 10vw;
   }
   &__form {
     position: absolute;
-    top: 30vh;
-    right: 25vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 </style>

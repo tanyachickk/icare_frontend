@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import { getDoctors } from '@/api/doctors';
 import { getAnswers } from '@/api/answers';
-import { getQuestions } from '@/api/questions';
+import { getQuestions, createQuestion, deleteQuestion } from '@/api/questions';
 import { getSpecializations } from '@/api/specializations';
+import { createOption } from '@/api/options';
 
 Vue.use(Vuex);
 
@@ -12,6 +14,7 @@ export default new Vuex.Store({
     questions: [],
     answers: [],
     specializations: [],
+    doctors: [],
   },
   mutations: {
     setAnswers(state, data) {
@@ -20,8 +23,17 @@ export default new Vuex.Store({
     setQuestions(state, data) {
       state.questions = data;
     },
+    deleteQuestion(state, id) {
+      state.questions = state.questions.filter((q: any) => q.id !== id);
+    },
+    addQuestion(state, data) {
+      state.questions = [...state.questions, data] as any;
+    },
     setSpecializations(state, data) {
       state.specializations = data;
+    },
+    setDoctors(state, data) {
+      state.doctors = data;
     },
   },
   actions: {
@@ -41,6 +53,29 @@ export default new Vuex.Store({
       dispatch('getAnswers');
       dispatch('getQuestions');
       dispatch('getSpecializations');
+      dispatch('getDoctors');
+    },
+    async createQuestion({ commit }, { data, options }) {
+      const result = await createQuestion(data);
+      options.forEach((text: string, i: number) => {
+        if (text) {
+          createOption({ text, question: result.id, order: i }).then((opt) => {
+            if (!result.options) {
+              result.options = [];
+            }
+            result.options = [...result.options, opt];
+          });
+        }
+      });
+      commit('addQuestion', result);
+    },
+    async deleteQuestion({ commit }, id: number) {
+      await deleteQuestion(id);
+      commit('deleteQuestion', id);
+    },
+    async getDoctors({ commit }) {
+      const doctors = await getDoctors();
+      commit('setDoctors', doctors);
     },
   },
 });
