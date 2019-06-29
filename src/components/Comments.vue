@@ -1,9 +1,10 @@
 <template lang="pug">
   .comments
+    .no-comment(v-if="!comments.length") На этот вопрос пока никто не ответил
     .comment(v-for="comment in comments" :key="comment.id")
       .comment__user {{ `${comment.user.lastName} ${comment.user.firstName} ${comment.user.patronymic}` }}
       .comment__age {{ comment.user.age }}
-      .comment__date {{ comment.appointment.dateTimestamp }}
+      .comment__date {{ moment(+comment.appointment.dateTimestamp).format('DD. MM. YYYY') }}
       .comment__value {{ comment.value }}
 </template>
 

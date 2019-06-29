@@ -43,6 +43,8 @@ import Comments from '@/components/Comments.vue';
 export default class Statistic extends Vue {
   @State('questions')
   private questions!: any[];
+  @State('appointments')
+  private appointments!: any[];
   @State('answers')
   private answers!: any[];
 
@@ -50,8 +52,30 @@ export default class Statistic extends Vue {
     .subtract(1, 'week')
     .toDate();
   filterEndDate = moment().toDate();
-  filterSpecialization = null;
-  filterDoctor = null;
+  filterSpecialization: any = null;
+  filterDoctor: any = null;
+
+  get filteredAnswers() {
+    return this.answers.filter((answer) => {
+      const date: any = moment(+answer.appointment.dateTimestamp);
+      const isBetween = date.isBetween(this.filterStartDate, this.filterEndDate, null, '[]');
+      if (!isBetween) {
+        return false;
+      }
+      const appointment = this.appointments.find((a) => a.id === answer.appointment.id);
+      if (this.filterDoctor !== null && appointment && this.filterDoctor.id !== appointment.doctor.id) {
+        return false;
+      }
+      if (
+        this.filterSpecialization !== null &&
+        appointment &&
+        this.filterSpecialization.id !== appointment.doctor.specialization.id
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }
 }
 </script>
 

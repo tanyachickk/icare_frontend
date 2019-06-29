@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import { getDoctors } from '@/api/doctors';
+import { getAppointments } from '@/api/appointments';
 import { getAnswers } from '@/api/answers';
 import { getQuestions, createQuestion, deleteQuestion } from '@/api/questions';
 import { getSpecializations } from '@/api/specializations';
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     answers: [],
     specializations: [],
     doctors: [],
+    appointments: [],
   },
   mutations: {
     setAnswers(state, data) {
@@ -35,6 +37,9 @@ export default new Vuex.Store({
     setDoctors(state, data) {
       state.doctors = data;
     },
+    setAppointments(state, data) {
+      state.appointments = data;
+    },
   },
   actions: {
     async getAnswers({ commit }) {
@@ -54,6 +59,7 @@ export default new Vuex.Store({
       dispatch('getQuestions');
       dispatch('getSpecializations');
       dispatch('getDoctors');
+      dispatch('getAppointments');
     },
     async createQuestion({ commit }, { data, options }) {
       const result = await createQuestion(data);
@@ -76,6 +82,10 @@ export default new Vuex.Store({
     async getDoctors({ commit }) {
       const doctors = await getDoctors();
       commit('setDoctors', doctors);
+    },
+    async getAppointments({ commit }) {
+      const appointments = await getAppointments();
+      commit('setAppointments', appointments);
     },
   },
 });
