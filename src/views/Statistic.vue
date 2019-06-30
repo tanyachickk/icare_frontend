@@ -11,7 +11,7 @@
       .charts
         chart-container(title="Количество принятых пациентов по дням")
           appointments-count-chart
-        chart-container(v-for="question in questions" :key="`${question.id}-${answers.length}`" :title="question.text")
+        chart-container(v-for="question in questions" :key="`${question.id}-${filteredAnswers.length}`" :title="question.text")
           rating-chart(v-if="question.type === 'rating'" :rating="resultRating[question.id]")
           options-chart(v-if="question.type === 'singleselect'" :options="resultOptions[question.id]")
           comments(v-if="question.type === 'comment'" :comments="resultComments(question)")
@@ -87,7 +87,7 @@ export default class Statistic extends Vue {
       q.options.forEach((option: any) => {
         result[q.id][option.id] = 0;
       });
-      this.answers.forEach((a) => {
+      this.filteredAnswers.forEach((a) => {
         if (a.question.id === q.id) {
           result[q.id][a.value]++;
         }
@@ -96,7 +96,7 @@ export default class Statistic extends Vue {
     const a: any = {};
     questions.forEach((q) => {
       const answers = q.options;
-      answers.forEach((v) => {
+      answers.forEach((v: any) => {
         if (!a[q.id]) {
           a[q.id] = {};
         }
@@ -114,7 +114,7 @@ export default class Statistic extends Vue {
       for (let i = 1; i <= 5; i++) {
         result[q.id][i] = 0;
       }
-      this.answers.forEach((a) => {
+      this.filteredAnswers.forEach((a) => {
         if (a.question.id === q.id) {
           result[q.id][+a.value]++;
         }
@@ -124,7 +124,7 @@ export default class Statistic extends Vue {
   }
 
   resultComments(question: any) {
-    return this.answers.filter((a) => a.question.id === question.id);
+    return this.filteredAnswers.filter((a) => a.question.id === question.id);
   }
 }
 </script>

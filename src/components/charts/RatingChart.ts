@@ -55,6 +55,7 @@ export default class RatingChart extends mixins(HorizontalBar) {
                 fontFamily: 'Open Sans',
                 fontSize: 14,
                 stepSize: 1,
+                min: 0,
               },
               scaleLabel: {
                 display: true,
