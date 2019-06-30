@@ -95,8 +95,8 @@ export default class PollsQuestionView extends Vue {
       position: absolute;
       left: 1rem;
       top: 50%;
-      width: 0.4rem;
-      height: 0.4rem;
+      width: 0.5rem;
+      height: 0.5rem;
       border-radius: 50%;
       border: 1px solid var(--primary);
       transform: translateY(-50%);

@@ -11,10 +11,10 @@
       .charts
         chart-container(title="Количество принятых пациентов по дням")
           appointments-count-chart
-        chart-container(v-for="question in questions" :key="question.id" :title="question.text")
-          rating-chart(v-if="question.type === 'rating'")
-          options-chart(v-if="question.type === 'singleselect'")
-          comments(v-if="question.type === 'comment'" :comments="answers.filter((a) => a.question.id === question.id)")
+        chart-container(v-for="question in questions" :key="`${question.id}-${answers.length}`" :title="question.text")
+          rating-chart(v-if="question.type === 'rating'" :rating="resultRating[question.id]")
+          options-chart(v-if="question.type === 'singleselect'" :options="resultOptions[question.id]")
+          comments(v-if="question.type === 'comment'" :comments="resultComments(question)")
 </template>
 
 <script lang="ts">
@@ -47,6 +47,8 @@ export default class Statistic extends Vue {
   private appointments!: any[];
   @State('answers')
   private answers!: any[];
+  @State('options')
+  private options!: any[];
 
   filterStartDate = moment()
     .subtract(1, 'week')
@@ -75,6 +77,54 @@ export default class Statistic extends Vue {
       }
       return true;
     });
+  }
+
+  get resultOptions() {
+    const questions = this.questions.filter((q) => q.type === 'singleselect');
+    const result: any = {};
+    questions.forEach((q) => {
+      result[q.id] = {};
+      q.options.forEach((option: any) => {
+        result[q.id][option.id] = 0;
+      });
+      this.answers.forEach((a) => {
+        if (a.question.id === q.id) {
+          result[q.id][a.value]++;
+        }
+      });
+    });
+    const a: any = {};
+    questions.forEach((q) => {
+      const answers = q.options;
+      answers.forEach((v) => {
+        if (!a[q.id]) {
+          a[q.id] = {};
+        }
+        a[q.id][v.text] = result[q.id][v.id];
+      });
+    });
+    return a;
+  }
+
+  get resultRating() {
+    const questions = this.questions.filter((q) => q.type === 'rating');
+    const result: any = {};
+    questions.forEach((q) => {
+      result[q.id] = {};
+      for (let i = 1; i <= 5; i++) {
+        result[q.id][i] = 0;
+      }
+      this.answers.forEach((a) => {
+        if (a.question.id === q.id) {
+          result[q.id][+a.value]++;
+        }
+      });
+    });
+    return result;
+  }
+
+  resultComments(question: any) {
+    return this.answers.filter((a) => a.question.id === question.id);
   }
 }
 </script>

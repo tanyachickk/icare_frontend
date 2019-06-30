@@ -23,12 +23,21 @@ export default class Main extends Vue {
   @Action('getData')
   private getData: any;
 
+  private timer: any = null;
+
   get routes() {
     return (this.$router as any).options.routes[1].children.filter((item: any) => item.meta && item.meta.title);
   }
 
   private async created() {
     this.getData();
+    this.timer = setInterval(() => {
+      this.getData();
+    }, 2000);
+  }
+
+  private beforeDestroyed() {
+    clearInterval(this.timer);
   }
 }
 </script>

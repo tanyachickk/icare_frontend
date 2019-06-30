@@ -6,7 +6,7 @@ import { getAppointments } from '@/api/appointments';
 import { getAnswers } from '@/api/answers';
 import { getQuestions, createQuestion, deleteQuestion } from '@/api/questions';
 import { getSpecializations } from '@/api/specializations';
-import { createOption } from '@/api/options';
+import { createOption, getOptions } from '@/api/options';
 
 Vue.use(Vuex);
 
@@ -16,6 +16,7 @@ export default new Vuex.Store({
     answers: [],
     specializations: [],
     doctors: [],
+    options: [],
     appointments: [],
   },
   mutations: {
@@ -39,6 +40,9 @@ export default new Vuex.Store({
     },
     setAppointments(state, data) {
       state.appointments = data;
+    },
+    setOptions(state, data) {
+      state.options = data;
     },
   },
   actions: {
@@ -86,6 +90,10 @@ export default new Vuex.Store({
     async getAppointments({ commit }) {
       const appointments = await getAppointments();
       commit('setAppointments', appointments);
+    },
+    async getOptions({ commit }) {
+      const options = await getOptions();
+      commit('setOptions', options);
     },
   },
 });

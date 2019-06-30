@@ -6,19 +6,26 @@ import { mixins } from 'vue-class-component';
   extends: HorizontalBar,
 })
 export default class RatingChart extends mixins(HorizontalBar) {
-  @Prop({ default: () => [1, 0, 2, 5, 4] }) public data!: number[];
-  @Prop({ default: () => ['1', '2', '3', '4', '5'] }) public options!: string[];
+  @Prop({ default: () => ({}) }) public rating!: any;
+
+  get labels() {
+    return this.rating ? Object.keys(this.rating) : [];
+  }
+
+  get values() {
+    return this.rating ? Object.values(this.rating) : [];
+  }
 
   public mounted() {
     this.renderChart(
       {
-        labels: this.options,
+        labels: this.labels,
         datasets: [
           {
             backgroundColor: 'rgba(25, 136, 255, 0.15)',
             borderColor: '#349cec',
             borderWidth: 2,
-            data: this.data,
+            data: this.values,
           },
         ],
       },

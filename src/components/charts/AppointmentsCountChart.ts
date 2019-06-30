@@ -4,16 +4,28 @@ import { mixins } from 'vue-class-component';
 import moment from 'moment';
 
 function getDate() {
-  return moment().format('DD. MM. YYYY');
+  return moment().format('DD.MM.YYYY');
 }
 
 @Component({
   extends: Line,
 })
 export default class AppointmentsCountChart extends mixins(Line) {
-  @Prop({ default: () => [1, 0, 2, 5, 4] }) public data!: number[];
+  @Prop({ default: () => [5, 5, 4, 5, 5, 6, 4, 7, 5, 4, 5, 3] }) public data!: number[];
   @Prop({
-    default: () => [getDate(), getDate(), getDate(), getDate(), getDate()],
+    default: () => [
+      getDate(),
+      getDate(),
+      getDate(),
+      getDate(),
+      getDate(),
+      getDate(),
+      getDate(),
+      getDate(),
+      getDate(),
+      getDate(),
+      getDate(),
+    ],
   })
   public options!: string[];
 
