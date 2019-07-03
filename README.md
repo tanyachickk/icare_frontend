@@ -1,5 +1,11 @@
 # icare_frontend
 
+## Preview
+<img src="./screen1.png" />
+<img src="./screen2.png" />
+<img src="./screen3.png" />
+<img src="./screen4.png" />
+
 ## Project setup
 ```
 yarn install
